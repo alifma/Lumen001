@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class MenuController extends Controller
 {
@@ -14,7 +15,13 @@ class MenuController extends Controller
      */
     public function index()
     {
-        //
+        $menu = Menu::all();
+        $data = [
+            'status' => 200,
+            'msg'    => "Show All Menu Success",
+            'data'   => $menu
+        ];
+        return response()->json($data, Response::HTTP_OK);
     }
 
     /**
@@ -35,7 +42,31 @@ class MenuController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'menu' => 'required|unique:menus',
+            'id_category' => 'required|numeric',
+            'img' => 'required|mimes:png,jpg|max:2048',
+            'price' => 'required|numeric',
+        ]);
+        // Set File name
+        $imgExt = $request->file('img')->getClientOriginalExtension();
+        $imgName = uniqid('img_').'.'.$imgExt;
+        // Build menu Data
+        $menuData =  [
+            'menu' => $request->input('menu'),
+            'id_category' => $request->input('id_category'),
+            'img' => $imgName,
+            'price' => $request->input('price'),
+        ];
+        // Move Image files into folder upload with imgName as filename
+        $request->file('img')->move('upload', $imgName);
+        $insertedData = Menu::create($menuData);
+        $data = [
+            'status' => 200,
+            'msg'    => "Input Menu Success",
+            'data'   => $insertedData
+        ];
+        return response()->json($data, Response::HTTP_OK);
     }
 
     /**
@@ -44,9 +75,15 @@ class MenuController extends Controller
      * @param  \App\Models\Menu  $menu
      * @return \Illuminate\Http\Response
      */
-    public function show(Menu $menu)
+    public function show($id)
     {
-        //
+        $menu = Menu::where('id_menu', $id)->get();
+        $data = [
+            'status' => 200,
+            'msg'    => "Show Detail Menu",
+            'data'   => $menu
+        ];
+        return response()->json($data, Response::HTTP_OK);
     }
 
     /**
@@ -67,9 +104,20 @@ class MenuController extends Controller
      * @param  \App\Models\Menu  $menu
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Menu $menu)
+    public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'menu' => 'required',
+            'id_category' => 'required|numeric',
+            'price' => 'required|numeric',
+        ]);
+        $menu = Menu::where('id_menu', $id)->update($request->all());
+        $data = [
+            'status' => 200,
+            'msg'    => "Update Menu Success",
+            'data'   => $menu
+        ];
+        return response()->json($data, Response::HTTP_OK);
     }
 
     /**
@@ -78,8 +126,13 @@ class MenuController extends Controller
      * @param  \App\Models\Menu  $menu
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Menu $menu)
+    public function destroy($id)
     {
-        //
+        Menu::where('id_menu', $id)->delete();
+        $data = [
+            'status' => 200,
+            'msg'    => "Delete Menu Success"
+        ];
+        return response()->json($data, Response::HTTP_OK);
     }
 }
