@@ -14,7 +14,8 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        //
+        $data = Customer::all();
+        return response()->json($data);
     }
 
     /**
@@ -44,9 +45,10 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function show(Customer $customer)
+    public function show($id)
     {
-        //
+        $data = Customer::where('id_customer', $id)->get();
+        return response()->json($data);
     }
 
     /**

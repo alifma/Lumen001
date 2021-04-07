@@ -14,7 +14,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-       return response()->json("ini adalah func index class categoryController");
+        $data = Category::all();
+        return response()->json($data);
+    //    return response()->json("ini adalah func index class categoryController");
     }
 
     /**
@@ -44,9 +46,10 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function show(Category $category)
+    public function show($id)
     {
-        //
+        $data = Category::where('id_category', $id)->get();
+        return response()->json($data);
     }
 
     /**
