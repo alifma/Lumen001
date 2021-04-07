@@ -49,4 +49,13 @@ class LoginController extends Controller
         ];
         return response()->json($data, Response::HTTP_UNAUTHORIZED);
     }
+
+    public function logout(Request $request) {
+        User::where('api_token', $request->header('api_token'))->update(['api_token' => '']);
+        $data = [
+            'status' => 200,
+            'msg'    => "Logout Success",
+        ];
+        return response()->json($data, Response::HTTP_OK);
+    }
 }

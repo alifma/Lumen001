@@ -40,4 +40,7 @@ $router->group(['prefix' => 'api','middleware' => 'auth'], function () use ($rou
     $router->post('/menu', ['uses'=> 'MenuController@store']);
     $router->put('/menu/{id}', ['uses'=> 'MenuController@update']);
     $router->delete('/menu/{id}', ['uses'=> 'MenuController@destroy']);
+
+    // Logout
+    $router->get('/logout', ['uses'=> 'LoginController@logout']);
 });
