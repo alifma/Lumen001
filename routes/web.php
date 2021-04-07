@@ -16,8 +16,8 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
-
-$router->group(['prefix' => 'api'], function () use ($router) {
+$router->get('login', ['uses'=> 'LoginController@index']);
+$router->group(['prefix' => 'api','middleware' => 'user'], function () use ($router) {
     // Category Routes
     $router->get('/category', ['uses'=> 'CategoryController@index']);
     $router->get('/category/{id}', ['uses'=> 'CategoryController@show']);
