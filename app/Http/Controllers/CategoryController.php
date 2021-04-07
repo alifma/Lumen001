@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class CategoryController extends Controller
 {
@@ -14,8 +15,13 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $data = Category::all();
-        return response()->json($data);
+        $category = Category::all();
+        $data = [
+            'status' => 200,
+            'msg'    => "Show All Category Success",
+            'data'   => $category
+        ];
+        return response()->json($data, Response::HTTP_OK);
     //    return response()->json("ini adalah func index class categoryController");
     }
 
@@ -37,7 +43,17 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'category' => 'required|unique:categories',
+            'desc' => 'required'
+        ]);
+        $category = Category::create($request->all());
+        $data = [
+            'status' => 200,
+            'msg'    => "Input Category Success",
+            'data'   => $category
+        ];
+        return response()->json($data, Response::HTTP_OK);
     }
 
     /**
@@ -48,8 +64,13 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $data = Category::where('id_category', $id)->get();
-        return response()->json($data);
+        $category = Category::where('id_category', $id)->get();
+        $data = [
+            'status' => 200,
+            'msg'    => "Show Detail Success",
+            'data'   => $category
+        ];
+        return response()->json($data, Response::HTTP_OK);
     }
 
     /**
@@ -70,9 +91,18 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'category' => 'required|unique:categories',
+            'desc' => 'required'
+        ]);
+        Category::where('id_category', $id)->update($request->all());
+        $data = [
+            'status' => 200,
+            'msg'    => "Update Category Success"
+        ];
+        return response()->json($data, Response::HTTP_OK);
     }
 
     /**
@@ -81,8 +111,13 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy($id)
     {
-        //
+        Category::where('id_category', $id)->delete();
+        $data = [
+            'status' => 200,
+            'msg'    => "Delete Category Success"
+        ];
+        return response()->json($data, Response::HTTP_OK);
     }
 }

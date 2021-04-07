@@ -21,14 +21,14 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     // Category Routes
     $router->get('/category', ['uses'=> 'CategoryController@index']);
     $router->get('/category/{id}', ['uses'=> 'CategoryController@show']);
-    $router->post('/category/{id}', ['uses'=> 'CategoryController@store']);
+    $router->post('/category/', ['uses'=> 'CategoryController@store']);
     $router->put('/category/{id}', ['uses'=> 'CategoryController@update']);
     $router->delete('/category/{id}', ['uses'=> 'CategoryController@destroy']);
 
     // customer Routes
     $router->get('/customer', ['uses'=> 'CustomerController@index']);
     $router->get('/customer/{id}', ['uses'=> 'CustomerController@show']);
-    $router->post('/customer/{id}', ['uses'=> 'CustomerController@store']);
+    $router->post('/customer/', ['uses'=> 'CustomerController@store']);
     $router->put('/customer/{id}', ['uses'=> 'CustomerController@update']);
     $router->delete('/customer/{id}', ['uses'=> 'CustomerController@destroy']);
 });

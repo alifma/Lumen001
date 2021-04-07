@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class CustomerController extends Controller
 {
@@ -14,8 +15,13 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $data = Customer::all();
-        return response()->json($data);
+        $customer = Customer::all();
+        $data = [
+            'status' => 200,
+            'msg'    => "Show All Customer Success",
+            'data'   => $customer
+        ];
+        return response()->json($data, Response::HTTP_OK);
     }
 
     /**
@@ -36,7 +42,19 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $this->validate($request, [
+            'name'    => 'required|unique:customers',
+            'address' => 'required',
+            'phone'   => 'required'
+        ]);
+        $customer = Customer::create($request->all());
+        $data = [
+            'status' => 200,
+            'msg'    => "Insert Customer Success",
+            'data'   => $customer
+        ];
+        return response()->json($data, Response::HTTP_OK);
     }
 
     /**
@@ -47,8 +65,13 @@ class CustomerController extends Controller
      */
     public function show($id)
     {
-        $data = Customer::where('id_customer', $id)->get();
-        return response()->json($data);
+        $category = Customer::where('id_customer', $id)->get();
+        $data = [
+            'status' => 200,
+            'msg'    => "Show Detail Success",
+            'data'   => $category
+        ];
+        return response()->json($data, Response::HTTP_OK);
     }
 
     /**
@@ -69,9 +92,19 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Customer $customer)
+    public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name'    => 'required|unique:customers',
+            'address' => 'required',
+            'phone'   => 'required|numeric'
+        ]);
+        Customer::where('id_customer', $id)->update($request->all());
+        $data = [
+            'status' => 200,
+            'msg'    => "Update Customer Success",
+        ];
+        return response()->json($data, Response::HTTP_OK);
     }
 
     /**
@@ -80,8 +113,13 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer  $customer
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Customer $customer)
+    public function destroy($id)
     {
-        //
+        Customer::where('id_customer', $id)->delete();
+        $data = [
+            'status' => 200,
+            'msg'    => "Delete Customer Success",
+        ];
+        return response()->json($data, Response::HTTP_OK);
     }
 }
